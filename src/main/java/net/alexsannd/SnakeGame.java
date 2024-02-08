@@ -1,15 +1,24 @@
 package net.alexsannd;
 
+import net.alexsannd.grid.GridController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
+    enum Direction {
+        UP, DOWN, LEFT, RIGHT
+    }
+    Snake snake;
+    Direction direction = Direction.RIGHT;
+
+    GridController gridController;
+    boolean running = false;
     double time = 0;
     int timestep = 1000;
     //TODO 1
@@ -17,22 +26,21 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     // storleken på rutorna i pixlar, storleken på mellanrummet mellan rutorna i pixlar
     //TODO 2
     //Ändra så att det blir en matematiskt uträkning som räknar ut hur brett och högt fönstret behöver vara nedan
-    int WIDTH = 800, HEIGHT = 600;
+    int WIDTH = 1000, HEIGHT = 800;
     JFrame window;
     Timer tm = new Timer(timestep, this);
-    ArrayList<Coordinate> snake = new ArrayList<>();
-    Coordinate apple;
 
     public static void main(String[] args) {
         JFrame window = new JFrame("Slutprojekt - Programmering 1 - Snake");
         SnakeGame game = new SnakeGame(window);
         window.setContentPane(game);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(true);
+        window.setResizable(false);
         window.pack();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
         game.setUp();
+
     }
 
     public SnakeGame(JFrame window){
@@ -41,6 +49,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         setFocusable(true);
         requestFocus();
         this.window = window;
+        gridController = new GridController(WIDTH/(30+3), HEIGHT/(30+3), 30, 30, 3, Color.WHITE);
+        snake = new Snake(gridController);
+        snake.setHead(gridController.getRows()/2, gridController.getColumns()/2);
     }
 
     public void setUp(){
@@ -52,6 +63,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         tm.start();
+        snake.addBodyPart();
     }
 
     public int randomNumber(int max){
@@ -71,13 +83,32 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         //går igenom ArrayListan snake och ritar ut en ruta med samma formel som för rutnätet, men istället för i och j
         //så använer du dig av varje xPos och yPos för ormens delar. Du kommer märka att du har gjort rätt om ormens
         // bitar ligger precis på ditt rutnäts bitar.
-
+        gridController.paint(g);
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         time += timestep;
         System.out.println("Tick tock: " + time);
+        if (running) {
+            switch (direction) {
+                case UP:
+                    snake.moveUp();
+                    break;
+                case DOWN:
+                    snake.moveDown();
+                    break;
+                case LEFT:
+                    snake.moveLeft();
+                    break;
+                case RIGHT:
+                    snake.moveRight();
+                    break;
+
+            }
+
+        }
+
         //TODO 6
         //Med hjälp av en for-loop som börjar i slutet av ArrayListan och rör sig bakåt (mot i = 0) så vill vi gå
         // igenom ArrayListan och flytta varje bit av ormen så det ser ut som att den rör på sig. När varje bit av
@@ -102,9 +133,24 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent keyEvent) {
         System.out.println("Key Pressed!");
-        int key = keyEvent.getKeyCode();
-        if(key == KeyEvent.VK_SPACE){
-            System.out.println("Space!");
+        running = true;
+        switch (keyEvent.getKeyCode()){
+            case KeyEvent.VK_UP:
+                System.out.println("UP");
+                direction = Direction.UP;
+                break;
+            case KeyEvent.VK_DOWN:
+                System.out.println("DOWN");
+                direction = Direction.DOWN;
+                break;
+            case KeyEvent.VK_LEFT:
+                System.out.println("LEFT");
+                direction = Direction.LEFT;
+                break;
+            case KeyEvent.VK_RIGHT:
+                System.out.println("RIGHT");
+                direction = Direction.RIGHT;
+                break;
         }
         //TODO 8
         //Använd tangenterna för att styra åt vilket håll huvudet ska rära sig. Använd variabeln du har skapat tidigare
