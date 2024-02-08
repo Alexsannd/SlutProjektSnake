@@ -61,9 +61,19 @@ public class Snake {
         if (y < 0) {
             y = gridController.getColumns() - 1;
         }
-        gridController.getCell(bodyParts.get(0).x, bodyParts.get(0).y).setColor(Color.WHITE);
-        bodyParts.remove(0);
         bodyParts.add(0, new Point(x, y));
+        System.out.println("Body parts: " + bodyParts);
+        for (Point point : bodyParts) {
+            System.out.println(point + " " + bodyParts.indexOf(point) + " " + bodyParts.size());
+            if (bodyParts.indexOf(point) + 1 < bodyParts.size()) {
+                System.out.println("Setting location: " + point);
+                bodyParts.get(bodyParts.indexOf(point) + 1).setLocation(point);
+            }
+            gridController.getCell(point.x, point.y).setColor(Color.GREEN);
+        }
+        gridController.getCell(bodyParts.get(bodyParts.size() - 1).x, bodyParts.get(bodyParts.size() - 1).y).setColor(Color.WHITE);
+        bodyParts.remove(bodyParts.size() - 1);
+
         gridController.getCell(x, y).setColor(Color.GREEN);
     }
     public void moveDown() {
@@ -73,9 +83,19 @@ public class Snake {
         if (y >= gridController.getColumns()) {
             y = 0;
         }
-        gridController.getCell(bodyParts.get(0).x, bodyParts.get(0).y).setColor(Color.WHITE);
-        bodyParts.remove(0);
         bodyParts.add(0, new Point(x, y));
+        System.out.println("Body parts: " + bodyParts);
+        for (Point point : bodyParts) {
+            System.out.println(point + " " + bodyParts.indexOf(point) + " " + bodyParts.size());
+            if (bodyParts.indexOf(point) + 1 < bodyParts.size()) {
+                System.out.println("Setting location: " + point);
+                bodyParts.get(bodyParts.indexOf(point) + 1).setLocation(point);
+            }
+            gridController.getCell(point.x, point.y).setColor(Color.GREEN);
+        }
+        gridController.getCell(bodyParts.get(bodyParts.size() - 1).x, bodyParts.get(bodyParts.size() - 1).y).setColor(Color.WHITE);
+        bodyParts.remove(bodyParts.size() - 1);
+
         gridController.getCell(x, y).setColor(Color.GREEN);
     }
     public void moveLeft() {

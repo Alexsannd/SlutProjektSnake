@@ -52,6 +52,8 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         gridController = new GridController(WIDTH/(30+3), HEIGHT/(30+3), 30, 30, 3, Color.WHITE);
         snake = new Snake(gridController);
         snake.setHead(gridController.getRows()/2, gridController.getColumns()/2);
+        snake.addBodyPart();
+        snake.addBodyPart();
     }
 
     public void setUp(){
@@ -63,7 +65,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         tm.start();
-        snake.addBodyPart();
+
     }
 
     public int randomNumber(int max){
