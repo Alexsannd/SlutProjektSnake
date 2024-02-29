@@ -83,8 +83,19 @@ public class Snake {
         return !bodyParts.get(1).equals(finalHead);
 
     }
+    public boolean checkCollision(){
+        Point head = bodyParts.get(0);
+        // Check if the head collides with the body
+        for(int i = 1; i < bodyParts.size(); i++){
+            if (head.equals(bodyParts.get(i))){
+                return true;
+            }
+        }
+        return false;
 
-    public void move(Direction direction) {
+    }
+
+    public boolean move(Direction direction) {
         // Create a new list to hold the new locations of the body parts
         List<Point> newBodyPartsLocations = new ArrayList<>(bodyParts);
 
@@ -106,6 +117,9 @@ public class Snake {
                 head = new Point(head.x + 1, head.y);
                 break;
         }
+        if (head.x < 0 || head.y < 0 || head.x >= gridController.getRows() || head.y >= gridController.getColumns()){
+            return false;
+        }
 
         // Add the new head location to the start of the new locations list
         newBodyPartsLocations.add(0, head);
@@ -122,5 +136,12 @@ public class Snake {
 
         // Make the first body part green
         gridController.getCell(bodyParts.get(0).x, bodyParts.get(0).y).setColor(Color.GREEN);
+        return true;
+    }
+    public void reset(){
+        for (Point bodyPart : bodyParts) {
+            gridController.getCell(bodyPart.x, bodyPart.y).setColor(Color.WHITE);
+        }
+        bodyParts.clear();
     }
 }

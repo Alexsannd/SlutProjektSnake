@@ -16,7 +16,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     Snake.Direction lastDirection = Snake.Direction.RIGHT;
 
     GridController gridController;
-    boolean running = false;
+    boolean running = false, gameOver = false;
     double time = 0;
     int timestep = 1000;
 
@@ -50,9 +50,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         WIDTH = gridController.getWidth();
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         snake = new Snake(gridController);
-        snake.setHead(gridController.getRows()/2, gridController.getColumns()/2);
-        snake.addBodyPart();
-        snake.addBodyPart();
+        resetSnake();
         hud = new HUD(20, gridController.getHeight()+20, WIDTH-40, HEIGHT - gridController.getHeight()-40);
     }
 
@@ -62,6 +60,14 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         setFocusTraversalKeysEnabled(false);
         tm.start();
 
+    }
+    void resetSnake(){
+        snake.reset();
+        snake.setHead(gridController.getRows()/2, gridController.getColumns()/2);
+        snake.addBodyPart();
+        snake.addBodyPart();
+        snake.addBodyPart();
+        snake.addBodyPart();
     }
 
     public int randomNumber(int max){
@@ -75,6 +81,38 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
         gridController.paint(g);
         hud.paint(g);
+
+        if (gameOver) {
+            displayGameOver(g);
+        }
+    }
+    public void displayGameOver(Graphics g) {
+        g.setColor(new Color(0, 0, 0, 150));
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        // Set the color and font for the game over message
+        g.setColor(Color.RED);
+        g.setFont(new Font("Arial", Font.BOLD, 50));
+
+        // Calculate the x and y coordinates to center the game over message
+        FontMetrics metrics = g.getFontMetrics(g.getFont());
+        int x = (getWidth() - metrics.stringWidth("GAME OVER!")) / 2;
+        int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
+
+        // Draw the game over message
+        g.drawString("GAME OVER!", x, y);
+
+        // Set the color and font for the restart instruction
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.PLAIN, 20));
+
+        // Calculate the x and y coordinates to center the restart instruction
+        metrics = g.getFontMetrics(g.getFont());
+        x = (getWidth() - metrics.stringWidth("Press any button to restart")) / 2;
+        y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent() + 60;
+
+        // Draw the restart instruction
+        g.drawString("Press any button to restart", x, y);
     }
 
     @Override
@@ -87,15 +125,15 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             } else {
                 direction = lastDirection;
             }
-            snake.move(direction);
+
+            if (snake.checkCollision() || !snake.move(direction)) {
+                System.out.println("Game Over!");
+                gameOver = true;
+                running = false;
+                tm.stop();
+            }
 
         }
-
-        //TODO 7
-        //Efter att alla bitar av ormen har rört på sig så behöver du kontrollera om ormen har hamnat utanför spelplanen
-        // och markera detta på något sätt. Enklast är att du ifall huvudet ligger utanför spelplanen bara stänger av
-        // timern genom att skriva tm.stop()
-
         repaint();
     }
 
@@ -126,9 +164,13 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                 direction = Snake.Direction.RIGHT;
                 break;
         }
-        //TODO 8
-        //Använd tangenterna för att styra åt vilket håll huvudet ska rära sig. Använd variabeln du har skapat tidigare
-        //och ge denna ett värde för rätt riktning.
+        if (gameOver) {
+            gameOver = false;
+            running = false;
+            resetSnake();
+            hud.setScore(0);
+            tm.start();
+        }
         repaint();
     }
 
