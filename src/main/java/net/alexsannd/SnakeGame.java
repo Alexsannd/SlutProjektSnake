@@ -11,11 +11,9 @@ import java.awt.event.KeyListener;
 
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
-    enum Direction {
-        UP, DOWN, LEFT, RIGHT
-    }
     Snake snake;
-    Direction direction = Direction.RIGHT;
+    Snake.Direction direction = Snake.Direction.RIGHT;
+    Snake.Direction lastDirection = Snake.Direction.RIGHT;
 
     GridController gridController;
     boolean running = false;
@@ -93,21 +91,12 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         time += timestep;
         System.out.println("Tick tock: " + time);
         if (running) {
-            switch (direction) {
-                case UP:
-                    snake.moveUp();
-                    break;
-                case DOWN:
-                    snake.moveDown();
-                    break;
-                case LEFT:
-                    snake.moveLeft();
-                    break;
-                case RIGHT:
-                    snake.moveRight();
-                    break;
-
+            if (snake.isMoveDirectionValid(direction)) {
+                lastDirection = direction;
+            } else {
+                direction = lastDirection;
             }
+            snake.move(direction);
 
         }
 
@@ -139,19 +128,19 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         switch (keyEvent.getKeyCode()){
             case KeyEvent.VK_UP:
                 System.out.println("UP");
-                direction = Direction.UP;
+                direction = Snake.Direction.UP;
                 break;
             case KeyEvent.VK_DOWN:
                 System.out.println("DOWN");
-                direction = Direction.DOWN;
+                direction = Snake.Direction.DOWN;
                 break;
             case KeyEvent.VK_LEFT:
                 System.out.println("LEFT");
-                direction = Direction.LEFT;
+                direction = Snake.Direction.LEFT;
                 break;
             case KeyEvent.VK_RIGHT:
                 System.out.println("RIGHT");
-                direction = Direction.RIGHT;
+                direction = Snake.Direction.RIGHT;
                 break;
         }
         //TODO 8

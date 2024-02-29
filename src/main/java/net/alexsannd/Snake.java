@@ -8,7 +8,11 @@ import java.util.List;
 
 public class Snake {
     private final List<Point> bodyParts;
+
     private final GridController gridController;
+    public enum Direction {
+        UP, DOWN, LEFT, RIGHT
+    }
 
     public Snake(GridController gridController) {
         bodyParts = new ArrayList<>();
@@ -54,73 +58,69 @@ public class Snake {
     public List<Point> getBodyParts() {
         return bodyParts;
     }
-    public void moveUp() {
+
+    public boolean isMoveDirectionValid(Direction direction) {
+        // Get the current head location
         Point head = bodyParts.get(0);
-        int x = (int) head.getX();
-        int y = (int) head.getY() - 1;
-        if (y < 0) {
-            y = gridController.getColumns() - 1;
+
+        // Calculate the new head location based on the direction
+        switch (direction) {
+            case UP:
+                head = new Point(head.x, head.y - 1);
+                break;
+            case DOWN:
+                head = new Point(head.x, head.y + 1);
+                break;
+            case LEFT:
+                head = new Point(head.x - 1, head.y);
+                break;
+            case RIGHT:
+                head = new Point(head.x + 1, head.y);
+                break;
         }
-        bodyParts.add(0, new Point(x, y));
-        System.out.println("Body parts: " + bodyParts);
-        for (Point point : bodyParts) {
-            System.out.println(point + " " + bodyParts.indexOf(point) + " " + bodyParts.size());
-            if (bodyParts.indexOf(point) + 1 < bodyParts.size()) {
-                System.out.println("Setting location: " + point);
-                bodyParts.get(bodyParts.indexOf(point) + 1).setLocation(point);
-            }
-            gridController.getCell(point.x, point.y).setColor(Color.GREEN);
+
+        Point finalHead = head;
+        return !bodyParts.get(1).equals(finalHead);
+
+    }
+
+    public void move(Direction direction) {
+        // Create a new list to hold the new locations of the body parts
+        List<Point> newBodyPartsLocations = new ArrayList<>(bodyParts);
+
+        // Get the current head location
+        Point head = bodyParts.get(0);
+
+        // Calculate the new head location based on the direction
+        switch (direction) {
+            case UP:
+                head = new Point(head.x, head.y - 1);
+                break;
+            case DOWN:
+                head = new Point(head.x, head.y + 1);
+                break;
+            case LEFT:
+                head = new Point(head.x - 1, head.y);
+                break;
+            case RIGHT:
+                head = new Point(head.x + 1, head.y);
+                break;
         }
+
+        // Add the new head location to the start of the new locations list
+        newBodyPartsLocations.add(0, head);
+
+        // Remove the last body part (as it has now moved up to the previous body part's location)
+        newBodyPartsLocations.remove(newBodyPartsLocations.size() - 1);
+
+        // Make the last body part white
         gridController.getCell(bodyParts.get(bodyParts.size() - 1).x, bodyParts.get(bodyParts.size() - 1).y).setColor(Color.WHITE);
-        bodyParts.remove(bodyParts.size() - 1);
 
-        gridController.getCell(x, y).setColor(Color.GREEN);
-    }
-    public void moveDown() {
-        Point head = bodyParts.get(0);
-        int x = (int) head.getX();
-        int y = (int) head.getY() + 1;
-        if (y >= gridController.getColumns()) {
-            y = 0;
-        }
-        bodyParts.add(0, new Point(x, y));
-        System.out.println("Body parts: " + bodyParts);
-        for (Point point : bodyParts) {
-            System.out.println(point + " " + bodyParts.indexOf(point) + " " + bodyParts.size());
-            if (bodyParts.indexOf(point) + 1 < bodyParts.size()) {
-                System.out.println("Setting location: " + point);
-                bodyParts.get(bodyParts.indexOf(point) + 1).setLocation(point);
-            }
-            gridController.getCell(point.x, point.y).setColor(Color.GREEN);
-        }
-        gridController.getCell(bodyParts.get(bodyParts.size() - 1).x, bodyParts.get(bodyParts.size() - 1).y).setColor(Color.WHITE);
-        bodyParts.remove(bodyParts.size() - 1);
+        // Update the body parts list
+        bodyParts.clear();
+        bodyParts.addAll(newBodyPartsLocations);
 
-        gridController.getCell(x, y).setColor(Color.GREEN);
+        // Make the first body part green
+        gridController.getCell(bodyParts.get(0).x, bodyParts.get(0).y).setColor(Color.GREEN);
     }
-    public void moveLeft() {
-        Point head = bodyParts.get(0);
-        int x = (int) head.getX() - 1;
-        int y = (int) head.getY();
-        if (x < 0) {
-            x = gridController.getRows() - 1;
-        }
-        gridController.getCell(bodyParts.get(0).x, bodyParts.get(0).y).setColor(Color.WHITE);
-        bodyParts.remove(0);
-        bodyParts.add(0, new Point(x, y));
-        gridController.getCell(x, y).setColor(Color.GREEN);
-    }
-    public void moveRight() {
-        Point head = bodyParts.get(0);
-        int x = (int) head.getX() + 1;
-        int y = (int) head.getY();
-        if (x >= gridController.getRows()) {
-            x = 0;
-        }
-        gridController.getCell(bodyParts.get(0).x, bodyParts.get(0).y).setColor(Color.WHITE);
-        bodyParts.remove(0);
-        bodyParts.add(0, new Point(x, y));
-        gridController.getCell(x, y).setColor(Color.GREEN);
-    }
-
 }
