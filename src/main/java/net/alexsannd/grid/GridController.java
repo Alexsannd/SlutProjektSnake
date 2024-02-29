@@ -8,52 +8,19 @@ public class GridController {
     private final List<List<GridCell>> grid = new ArrayList<>();
     private int rows, columns;
     private int cellWidth, cellHeight;
-
-    public GridController(int rows, int columns, int cellWidth, int cellHeight){
-        this.rows = rows;
-        this.columns = columns;
-        this.cellWidth = cellWidth;
-        this.cellHeight = cellHeight;
-        for(int i = 0; i < rows; i++){
-            grid.add(new ArrayList<>());
-            for(int j = 0; j < columns; j++) {
-                grid.get(i).add(new GridCell(i * cellWidth + 5 * i, j * cellHeight + 5 * j, cellWidth, cellHeight));
-            }
-        }
-    }
-    public GridController(int rows, int columns, int cellWidth, int cellHeight, Color color){
-        this.rows = rows;
-        this.columns = columns;
-        this.cellWidth = cellWidth;
-        this.cellHeight = cellHeight;
-        for(int i = 0; i < rows; i++){
-            grid.add(new ArrayList<>());
-            for(int j = 0; j < columns; j++) {
-                grid.get(i).add(new GridCell(i * cellWidth + 5 * i, j * cellHeight + 5 * j, cellWidth, cellHeight));
-            }
-        }
-    }
-    public GridController(int rows, int columns, int cellWidth, int cellHeight, int Gap){
-        this.rows = rows;
-        this.columns = columns;
-        this.cellWidth = cellWidth;
-        this.cellHeight = cellHeight;
-        for(int i = 0; i < rows; i++){
-            grid.add(new ArrayList<>());
-            for(int j = 0; j < columns; j++) {
-                grid.get(i).add(new GridCell(i * cellWidth + Gap * i, j * cellHeight + Gap * j, cellWidth, cellHeight));
-            }
-        }
-    }
+    private int Gap = 5;
+    private Color color;
     public GridController(int rows, int columns, int cellWidth, int cellHeight, int Gap, Color color){
         this.rows = rows;
         this.columns = columns;
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
+        this.Gap = Gap;
+        this.color = color;
         for(int i = 0; i < rows; i++){
             grid.add(new ArrayList<>());
             for(int j = 0; j < columns; j++) {
-                grid.get(i).add(new GridCell(i * cellWidth + Gap * i, j * cellHeight + Gap * j, cellWidth, cellHeight));
+                grid.get(i).add(new GridCell(i * cellWidth + Gap * i, j * cellHeight + Gap * j, cellWidth, cellHeight, color));
             }
         }
     }
@@ -94,4 +61,11 @@ public class GridController {
     public int getCellHeight(){
         return cellHeight;
     }
+    public int getWidth(){
+        return rows * cellWidth + Gap * (rows-1);
+    }
+    public int getHeight(){
+        return columns * cellHeight + Gap * (columns-1);
+    }
+
 }
