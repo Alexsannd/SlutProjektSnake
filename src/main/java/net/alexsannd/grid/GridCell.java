@@ -17,30 +17,7 @@ public class GridCell {
         this.HEIGHT = HEIGHT;
         this.color = color;
     }
-    public GridCell(int xPos, int yPos, int WIDTH, int HEIGHT){
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.isOccupied = false;
-        this.WIDTH = WIDTH;
-        this.HEIGHT = HEIGHT;
-        this.color = Color.WHITE;
-    }
-    public GridCell(int xPos, int yPos, int WIDTH, int HEIGHT, int Gap, Color color){
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.isOccupied = false;
-        this.WIDTH = WIDTH;
-        this.HEIGHT = HEIGHT;
-        this.color = color;
-    }
-    public GridCell(int xPos, int yPos, int WIDTH, int HEIGHT, int Gap){
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.isOccupied = false;
-        this.WIDTH = WIDTH;
-        this.HEIGHT = HEIGHT;
-        this.color = Color.WHITE;
-    }
+
     public void paint(Graphics g) {
         g.setColor(color);
         g.fillRect(xPos, yPos, WIDTH, HEIGHT);
