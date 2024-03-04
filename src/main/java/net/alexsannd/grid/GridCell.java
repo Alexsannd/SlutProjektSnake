@@ -3,15 +3,14 @@ package net.alexsannd.grid;
 import java.awt.*;
 
 public class GridCell {
-    private int xPos, yPos;
+    private final Point position;
     private int WIDTH, HEIGHT;
     private boolean isOccupied;
     private Color color;
 
 
     public GridCell(int xPos, int yPos, int WIDTH, int HEIGHT, Color color){
-        this.xPos = xPos;
-        this.yPos = yPos;
+        this.position = new Point(xPos, yPos);
         this.isOccupied = false;
         this.WIDTH = WIDTH;
         this.HEIGHT = HEIGHT;
@@ -20,17 +19,17 @@ public class GridCell {
 
     public void paint(Graphics g) {
         g.setColor(color);
-        g.fillRect(xPos, yPos, WIDTH, HEIGHT);
+        g.fillRect(position.x, position.y, WIDTH, HEIGHT);
     }
     public void setColor(Color color){
         this.color = color;
     }
     public int getXPos(){
-        return xPos;
+        return position.x;
     }
 
     public int getYPos(){
-        return yPos;
+        return position.y;
     }
 
     public boolean isOccupied(){

@@ -1,6 +1,8 @@
 package net.alexsannd;
 
+import net.alexsannd.grid.Food;
 import net.alexsannd.grid.GridController;
+import net.alexsannd.grid.Snake;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
@@ -18,7 +22,8 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     GridController gridController;
     boolean running = false, gameOver = false;
     double time = 0;
-    int timestep = 1000;
+    List<Food> food = new ArrayList<>();
+    int timestep = 250;
 
     int cellWidth = 30, cellHeight = 30, Gap = 3;
 
@@ -46,12 +51,12 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         setFocusable(true);
         requestFocus();
         this.window = window;
-        gridController = new GridController(WIDTH/(cellWidth+Gap), HEIGHT/(cellHeight+Gap)-3, cellWidth, cellHeight, Gap, Color.WHITE);
+        gridController = new GridController(WIDTH/(cellWidth+Gap), HEIGHT/(cellHeight+Gap)-3, cellWidth, cellHeight, Gap, Color.black);
         WIDTH = gridController.getWidth();
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         snake = new Snake(gridController);
         resetSnake();
-        hud = new HUD(20, gridController.getHeight()+20, WIDTH-40, HEIGHT - gridController.getHeight()-40);
+        hud = new HUD(20, gridController.getHeight(), WIDTH-40, HEIGHT - gridController.getHeight()-20);
     }
 
     public void setUp(){
@@ -64,10 +69,6 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     void resetSnake(){
         snake.reset();
         snake.setHead(gridController.getRows()/2, gridController.getColumns()/2);
-        snake.addBodyPart();
-        snake.addBodyPart();
-        snake.addBodyPart();
-        snake.addBodyPart();
     }
 
     public int randomNumber(int max){
@@ -118,7 +119,6 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         time += timestep;
-        System.out.println("Tick tock: " + time);
         if (running) {
             if (snake.isMoveDirectionValid(direction)) {
                 lastDirection = direction;
@@ -131,6 +131,20 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                 gameOver = true;
                 running = false;
                 tm.stop();
+            }
+            if (food.isEmpty()) {
+                int x = randomNumber(gridController.getRows()-1);
+                int y = randomNumber(gridController.getColumns()-1);
+                Food f = new Food(x, y, Food.FoodType.APPLE, gridController);
+                food.add(f);
+            }
+            for (Food f : food) {
+                if (f.getPosition().equals(snake.getHead())) {
+                    snake.addBodyPart();
+                    hud.addScore(f.getPoints());
+                    food.remove(f);
+                    break;
+                }
             }
 
         }

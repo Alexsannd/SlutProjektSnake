@@ -67,5 +67,11 @@ public class GridController {
     public int getHeight(){
         return columns * cellHeight + Gap * (columns-1);
     }
+    public void setCellColor(int x, int y, Color color){
+        grid.get(x).get(y).setColor(color);
+    }
+    public Color getColor(){
+        return color;
+    }
 
 }

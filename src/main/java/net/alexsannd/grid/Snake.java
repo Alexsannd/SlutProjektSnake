@@ -1,4 +1,4 @@
-package net.alexsannd;
+package net.alexsannd.grid;
 
 import net.alexsannd.grid.GridController;
 
@@ -54,6 +54,9 @@ public class Snake {
         }
         gridController.getCell(x, y).setColor(Color.GREEN);
     }
+    public Point getHead(){
+        return bodyParts.get(0);
+    }
 
     public List<Point> getBodyParts() {
         return bodyParts;
@@ -80,8 +83,8 @@ public class Snake {
         }
 
         Point finalHead = head;
-        return !bodyParts.get(1).equals(finalHead);
-
+        if (bodyParts.size() > 1) return !bodyParts.get(1).equals(finalHead);
+        return true;
     }
     public boolean checkCollision(){
         Point head = bodyParts.get(0);
@@ -128,20 +131,41 @@ public class Snake {
         newBodyPartsLocations.remove(newBodyPartsLocations.size() - 1);
 
         // Make the last body part white
-        gridController.getCell(bodyParts.get(bodyParts.size() - 1).x, bodyParts.get(bodyParts.size() - 1).y).setColor(Color.WHITE);
+        gridController.getCell(bodyParts.get(bodyParts.size() - 1).x, bodyParts.get(bodyParts.size() - 1).y).setColor(gridController.getColor());
 
         // Update the body parts list
         bodyParts.clear();
         bodyParts.addAll(newBodyPartsLocations);
 
         // Make the first body part green
-        gridController.getCell(bodyParts.get(0).x, bodyParts.get(0).y).setColor(Color.GREEN);
+        //gridController.getCell(bodyParts.get(0).x, bodyParts.get(0).y).setColor(Color.GREEN);
+
+        updateSnakePartImages();
+
         return true;
     }
-    public void reset(){
-        for (Point bodyPart : bodyParts) {
-            gridController.getCell(bodyPart.x, bodyPart.y).setColor(Color.WHITE);
+    public void updateSnakePartImages(){
+        gridController.getCell(bodyParts.get(0).x, bodyParts.get(0).y).setColor(Color.GREEN);
+        for (int i = 0; i < bodyParts.size(); i++) {
+            if (!(i+2 < bodyParts.size())) continue;
+            if ((bodyParts.get(i).x == bodyParts.get(i+2).x-1 && bodyParts.get(i).y == bodyParts.get(i+2).y+1) || (bodyParts.get(i).x == bodyParts.get(i+2).x+1 && bodyParts.get(i).y == bodyParts.get(i+2).y+1) || (bodyParts.get(i).x == bodyParts.get(i+2).x+1 && bodyParts.get(i).y == bodyParts.get(i+2).y-1) || (bodyParts.get(i).x == bodyParts.get(i+2).x-1 && bodyParts.get(i).y == bodyParts.get(i+2).y-1)){
+                gridController.getCell(bodyParts.get(i+1).x, bodyParts.get(i+1).y).setColor(Color.YELLOW);
+            }
+            else if (bodyParts.get(i).x == bodyParts.get(i+2).x && bodyParts.get(i).y == bodyParts.get(i+2).y){
+                gridController.getCell(bodyParts.get(i+1).x, bodyParts.get(i+1).y).setColor(Color.RED);
+            }
+            else {
+                gridController.getCell(bodyParts.get(i+1).x, bodyParts.get(i+1).y).setColor(Color.GREEN);
+            }
+            System.out.println("i: " + i);
+
         }
-        bodyParts.clear();
+    }
+
+    public void reset() {
+        for (Point bodyPart : bodyParts) {
+            gridController.getCell(bodyPart.x, bodyPart.y).setColor(gridController.getColor());
+            bodyParts.clear();
+        }
     }
 }
