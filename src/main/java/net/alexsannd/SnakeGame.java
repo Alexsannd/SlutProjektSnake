@@ -28,7 +28,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     int cellWidth = 30, cellHeight = 30, Gap = 3;
 
     HUD hud;
-    int WIDTH = 1000, HEIGHT = 800;
+    int WIDTH = 1000, HEIGHT = 600;
     JFrame window;
     Timer tm = new Timer(timestep, this);
 

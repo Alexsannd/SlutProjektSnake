@@ -37,6 +37,8 @@ public class Snake {
                 // Add the new body part
                 bodyParts.add(newPosition);
 
+
+
                 // Set the color of the new body part
                 gridController.getCell(newPosition.x, newPosition.y).setColor(Color.GREEN);
 
