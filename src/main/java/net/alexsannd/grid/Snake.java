@@ -28,7 +28,6 @@ public class Snake {
         for (Point direction : directions) {
             // Calculate the new position
             Point newPosition = new Point(lastPart.x + direction.x, lastPart.y + direction.y);
-            System.out.println("New position: " + newPosition);
 
             // Check if the new position is valid
             if (gridController.getCell(newPosition.x, newPosition.y) != null) {
@@ -159,7 +158,6 @@ public class Snake {
             else {
                 gridController.getCell(bodyParts.get(i+1).x, bodyParts.get(i+1).y).setColor(Color.GREEN);
             }
-            System.out.println("i: " + i);
 
         }
     }
@@ -167,7 +165,7 @@ public class Snake {
     public void reset() {
         for (Point bodyPart : bodyParts) {
             gridController.getCell(bodyPart.x, bodyPart.y).setColor(gridController.getColor());
-            bodyParts.clear();
         }
+        bodyParts.clear();
     }
 }
