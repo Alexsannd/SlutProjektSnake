@@ -33,9 +33,16 @@ public class HUD {
 
     public void setScore(int score) {
         this.score = score;
+        if (this.score > highScore) {
+            highScore = this.score;
+        }
     }
     public void addScore(int score) {
         this.score += score;
+        if (this.score > highScore) {
+            highScore = this.score;
+        }
+
     }
 
     public void setHighScore(int highScore) {
