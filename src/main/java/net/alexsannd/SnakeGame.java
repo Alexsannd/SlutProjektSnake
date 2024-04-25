@@ -23,7 +23,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     boolean running = false, gameOver = false;
     double time = 0;
     List<Food> food = new ArrayList<>();
-    int timestep = 250;
+    int timestep = 150;
+    //150 is standard speed
+    //Make a speed multiplayer to change speed
 
     int cellWidth = 30, cellHeight = 30, Gap = 3;
 
@@ -69,6 +71,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     void resetSnake(){
         snake.reset();
         snake.setHead(gridController.getRows()/2, gridController.getColumns()/2);
+        snake.addBodyPart(gridController.getRows()/2, gridController.getColumns()/2+1);
     }
 
     public int randomNumber(int max){

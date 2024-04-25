@@ -21,30 +21,12 @@ public class Snake {
 
     public void addBodyPart() {
         // Define the directions
-        Point[] directions = {new Point(0, -1), new Point(-1, 0), new Point(0, 1), new Point(1, 0)};
+        bodyParts.add(new Point(bodyParts.get(bodyParts.size() - 1).x, bodyParts.get(bodyParts.size() - 1).y));
 
-        // Try each direction
-        Point lastPart = bodyParts.get(bodyParts.size() - 1);
-        for (Point direction : directions) {
-            // Calculate the new position
-            Point newPosition = new Point(lastPart.x + direction.x, lastPart.y + direction.y);
-
-            // Check if the new position is valid
-            if (gridController.getCell(newPosition.x, newPosition.y) != null) {
-
-
-                // Add the new body part
-                bodyParts.add(newPosition);
-
-
-
-                // Set the color of the new body part
-                gridController.getCell(newPosition.x, newPosition.y).setColor(Color.GREEN);
-
-                // Stop trying other directions
-                break;
-            }
-        }
+    }public void addBodyPart(int x, int y) {
+        // Define the directions
+        bodyParts.add(new Point(x, y));
+        gridController.getCell(x, y).setColor(Color.GREEN);
 
     }
     public void setHead(int x, int y) {
