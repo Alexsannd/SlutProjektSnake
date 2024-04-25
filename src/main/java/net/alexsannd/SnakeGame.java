@@ -20,7 +20,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     Snake.Direction lastDirection = Snake.Direction.RIGHT;
 
     GridController gridController;
-    boolean running = false, gameOver = false;
+    boolean running = false, gameOver = false, gameStart = false;
     double time = 0;
     List<Food> food = new ArrayList<>();
     int timestep = 150;
@@ -59,6 +59,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         snake = new Snake(gridController);
         resetSnake();
         hud = new HUD(20, gridController.getHeight(), WIDTH-40, HEIGHT - gridController.getHeight()-20);
+        gameStart = true;
     }
 
     public void setUp(){
@@ -122,35 +123,34 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         time += timestep;
-        if (running) {
-            if (snake.isMoveDirectionValid(direction)) {
-                lastDirection = direction;
-            } else {
-                direction = lastDirection;
-            }
-
-            if (snake.checkCollision() || !snake.move(direction)) {
-                System.out.println("Game Over!");
-                gameOver = true;
-                running = false;
-                tm.stop();
-            }
-            if (food.isEmpty()) {
-                int x = randomNumber(gridController.getRows()-1);
-                int y = randomNumber(gridController.getColumns()-1);
-                Food f = new Food(x, y, Food.FoodType.APPLE, gridController);
-                food.add(f);
-            }
-            for (Food f : food) {
-                if (f.getPosition().equals(snake.getHead())) {
-                    snake.addBodyPart();
-                    hud.addScore(f.getPoints());
-                    food.remove(f);
-                    break;
-                }
-            }
-
+        if (!running) return;
+        if (snake.isMoveDirectionValid(direction)) {
+            lastDirection = direction;
+        } else {
+            direction = lastDirection;
         }
+
+        if (snake.checkCollision() || !snake.move(direction)) {
+            System.out.println("Game Over!");
+            gameOver = true;
+            running = false;
+            tm.stop();
+        }
+        if (food.isEmpty()) {
+            int x = randomNumber(gridController.getRows()-1);
+            int y = randomNumber(gridController.getColumns()-1);
+            Food f = new Food(x, y, Food.FoodType.APPLE, gridController);
+            food.add(f);
+        }
+        for (Food f : food) {
+            if (f.getPosition().equals(snake.getHead())) {
+                snake.addBodyPart();
+                hud.addScore(f.getPoints());
+                food.remove(f);
+                break;
+            }
+        }
+
         repaint();
     }
 
@@ -162,7 +162,10 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent keyEvent) {
         System.out.println("Key Pressed!");
-        running = true;
+        if (gameStart) {
+            gameStart = false;
+            running = true;
+        }
         switch (keyEvent.getKeyCode()){
             case KeyEvent.VK_UP:
                 System.out.println("UP");
@@ -180,9 +183,17 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                 System.out.println("RIGHT");
                 direction = Snake.Direction.RIGHT;
                 break;
+            case KeyEvent.VK_ESCAPE:
+                if (running) {
+                    running = false;
+                } else {
+                    running = true;
+                    direction  = lastDirection;
+                }
         }
         if (gameOver) {
             gameOver = false;
+            gameStart = true;
             running = false;
             resetSnake();
             hud.setScore(0);
