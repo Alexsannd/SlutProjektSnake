@@ -1,7 +1,8 @@
-package net.alexsannd;
+package net.alexsannd
 
-public class Main {
-    public static void main(String[] args) {
-        SnakeGame.main(args);
+object Main {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        SnakeGame.Companion.main(args)
     }
 }
